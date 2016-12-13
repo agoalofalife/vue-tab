@@ -15,10 +15,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/{table}', function ($model) {
-    $model       = 'App\\'.$model;
-    $table       = new $model();
-    $data        = $table->all()->toJson();
-   return response()->json($data);
+
+    $model           = 'App\\'.$model;
+
+    if ( class_exists($model) )
+    {
+        $table       = new $model();
+        $data        = $table->all()->toJson();
+        return response()->json($data);
+    }
+
+   return response()->json([], 404);
 });
 
 
@@ -31,4 +38,13 @@ Route::post('/{table}', function ($model,Illuminate\Http\Request $request) {
         return response()->json([ 'title' => $request->title, 'value' => $request->value , 'id' => $request->id]);
     }
 
+});
+
+Route::delete('/{table}', function ($model, Illuminate\Http\Request $request){
+    $model  = 'App\\'.ucfirst($model);
+    $delete = $model::destroy($request->id);
+
+    if ( $delete ) {
+        return response()->json([ 'id' => $request->id]);
+    }
 });

@@ -1,4 +1,3 @@
-
 export default {
     setAllData( state, newData ){
         state.AllData = newData;
@@ -10,16 +9,15 @@ export default {
         state.TitleColumns = columns;
     },
     setSpecificallyPlace( state , newValue){
-        state.AllData.forEach( item => {
+        state.AllData.forEach( ( item ) => {
             if ( item.id == newValue.id ) {
-                // console.log( item,'item' );
-                // console.log(  `${item[newValue.title]}` ,'????');
                 item[newValue.title] = newValue.value;
-               // console.log(  ,' newValue.value' );
-                // item + '.' + newValue.title  = newValue.value;
             }
-            // console.log( item.id, 'item' );
         });
-        // console.log( state.AllData, 'state.AllData');
+    },
+    remove( state, id ){
+        state.AllData =  state.AllData.filter( ( element ) => {
+           return element.id != id;
+        })
     }
 }

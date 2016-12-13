@@ -1,27 +1,47 @@
 <template>
-    <div >
+    <div>
+        <sidebar v-on:filterChange="filterChange"></sidebar>
+        <div class="filter-list" v-show="filterState">
+            <div class="list-group">
+                <a href="#" class="list-group-item active">
+                  Скрыть колонки
+                </a>
+                <a href="#" class="list-group-item" v-for="column in AllColumns" :data-name="column"> <label><input type="checkbox">  {{ column }}</label></a>
+                <button type="button" class="btn btn-primary btn-lg active filter-btn" @click="saveFilter($event)">Сохранить</button>
+            </div>
+        </div>
         <div class="search">
             <input type="text" class="form-control"  placeholder="Название таблицы" @input="handlerNameTable($event)">
         </div>
-        <table class="table table-hover" v-if="state">
-            <thead>
-            <tr>
-                <th  v-for="title in AllColumns">{{ title }}</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="value in AllData" @dblclick="rename($event)"  v-on:keyup.enter="enter($event)">
-                <td v-for="(column, property) in value"  :data-id="value.id" :data-title="property" >{{ column }}</td>
-            </tr>
-            </tbody>
-        </table>
-        <p v-else> <img class="preloader" src="/images/preloader.gif"></p>
+        <div class="table-responsive">
+            <table class="table" v-if="state" >
+                <thead>
+                <tr>
+                    <th  class="active" v-for="title in AllColumns">{{ title }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="value in AllData" @dblclick="rename($event)"  v-on:keyup.enter="enter($event)" :data-id="value.id">
+                    <td v-for="(column, property) in value"  :data-id="value.id" :data-title="property" >{{ column }}</td>
+                    <td>
+                        <button type="button" class="btn btn-default btn-lg" @click="remove($event)">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button></td>
+
+                </tr>
+                </tbody>
+            </table>
+            <p v-else> <img class="preloader" src="/images/preloader.gif"></p>
+        </div>
+
+
 
     </div>
 </template>
 
 <script>
     import { mapGetters, mapActions } from 'vuex'
+    import sidebar from './sidebar.vue';
 
     export default {
         computed: {
@@ -32,8 +52,9 @@
         },
         data(){
           return {
-              state : false,
-              NameTable : null
+              state       : false,
+              NameTable   : null,
+              filterState : false
           }
         },
         methods : {
@@ -46,8 +67,7 @@
                 } );
             },
             rename(e) {
-
-                this.preRename(e.target);
+                this.resetInput(e.target);
                 let input            = document.createElement('input');
                 input.dataset.id     = e.target.dataset.id;
                 input.dataset.title  = e.target.dataset.title;
@@ -61,10 +81,10 @@
                     title : e.target.dataset.title,
                     value : e.target.value
                 }).then( () => {
-                 this.preRename();
+                 this.resetInput();
                 })
             },
-            preRename(  ){
+            resetInput(){
                 let currentInput = document.querySelector('.table input');
 
                 if ( currentInput !== null )
@@ -78,12 +98,49 @@
             assignAttributes(elem, target){
                 elem.dataset.id    = target.dataset.id,
                 elem.dataset.title = target.dataset.title
+            },
+            remove(e){
+                let id =  e.target.closest('tr').dataset.id;
+                this.$store.dispatch('removeRow', {
+                    id : id
+                });
+            },
+            filterChange(){
+                this.filterState = !this.filterState;
+            },
+            saveFilter(event){
+                var filterOn   = event.target.parentElement.querySelectorAll('input[type=checkbox]:checked'),
+                    casheArray = [],
+                    AllData    = this.$store.getters.AllData,
+                    NameTable  = this.$store.getters.NameTable;
+
+                filterOn.forEach( checkbox => {
+                    casheArray.push( checkbox.closest('a').dataset.name );
+                });
+                AllData.forEach( object => {
+//                    object.hasOwnProperty(prop)
+//                    console.log( casheArray.indexOf()  );
+                    for (var property  in object) {
+//                        console.log(  );
+                   if ( casheArray.indexOf(property) !== -1) {
+                     console.log(  property );
+                       delete object[property];
+                   }
+                    }
+
+                });
+//                console.log( AllData );
+                this.$store.commit('setAllData', AllData);
+                this.filterState = false;
             }
         },
         created(){
             this.$store.dispatch('AllData').then( () => {
                 this.state = this.$store.getters.AllData;
             } );
+        },
+        components:{
+            sidebar
         }
     }
 </script>
@@ -95,5 +152,17 @@
         width: 20%;
         display: block;
         margin: 0 auto;
+    }
+
+    .filter-list{
+        z-index: 1000;
+        margin-left: 40%;
+        width: 40%;
+    }
+    .filter-btn{
+        z-index: 1000;
+        margin-left: 40%;
+        margin-top: 1%;
+        position: relative;
     }
 </style>
