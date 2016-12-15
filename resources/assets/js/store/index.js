@@ -9,7 +9,8 @@ Vue.use(Vuex);
 const state = {
     AllData      : [],
     TitleColumns : null,
-    NameTable    : 'user'
+    NameTable    : 'user',
+
 };
 
 export default new Vuex.Store({

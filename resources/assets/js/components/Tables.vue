@@ -6,7 +6,8 @@
                 <a href="#" class="list-group-item active">
                   Скрыть колонки
                 </a>
-                <a href="#" class="list-group-item" v-for="column in AllColumns" :data-name="column"> <label><input type="checkbox">  {{ column }}</label></a>
+                <a href="#" class="list-group-item" v-for="column in AllColumns" :data-name="column">
+                    <label><input type="checkbox">  {{ column }}</label></a>
                 <button type="button" class="btn btn-primary btn-lg active filter-btn" @click="saveFilter($event)">Сохранить</button>
             </div>
         </div>
@@ -112,24 +113,25 @@
                 var filterOn   = event.target.parentElement.querySelectorAll('input[type=checkbox]:checked'),
                     casheArray = [],
                     AllData    = this.$store.getters.AllData,
-                    NameTable  = this.$store.getters.NameTable;
+                    AllColumns = this.$store.getters.AllColumns;
 
                 filterOn.forEach( checkbox => {
                     casheArray.push( checkbox.closest('a').dataset.name );
                 });
                 AllData.forEach( object => {
-//                    object.hasOwnProperty(prop)
-//                    console.log( casheArray.indexOf()  );
                     for (var property  in object) {
-//                        console.log(  );
                    if ( casheArray.indexOf(property) !== -1) {
-                     console.log(  property );
                        delete object[property];
                    }
                     }
-
                 });
-//                console.log( AllData );
+
+                AllColumns.forEach( (titleColumn, index) => {
+                        if ( casheArray.indexOf(titleColumn) !== -1) {
+                            delete AllColumns[index];
+                        }
+                });
+
                 this.$store.commit('setAllData', AllData);
                 this.filterState = false;
             }
