@@ -6,7 +6,7 @@
                 <a href="#" class="list-group-item active">
                   Скрыть колонки
                 </a>
-                <a href="#" class="list-group-item" v-for="column in AllColumns" :data-name="column">
+                <a href="#" class="list-group-item" v-for="column in AllColumns" :data-name="column" v-if="ActionColumn.indexOf(column) == -1">
                     <label><input type="checkbox">  {{ column }}</label></a>
                 <button type="button" class="btn btn-primary btn-lg active filter-btn" @click="saveFilter($event)">Сохранить</button>
             </div>
@@ -15,8 +15,8 @@
             <input type="text" class="form-control"  placeholder="Название таблицы" @input="handlerNameTable($event)">
         </div>
         <div class="col-lg-11 col-md-11 centering">
-            <div class="table-responsive table-bordered">
-                <table class="table" v-if="state" >
+            <div class="table-responsive ">
+                <table class="table table-bordered" v-if="state" >
                     <thead>
                     <tr>
                         <th  class="active" v-for="title in AllColumns" v-if="ClosedСolumn.indexOf(title) == -1">{{ title }}</th>
@@ -26,9 +26,8 @@
                     <tr v-for="value in AllData" @dblclick="rename($event)"  v-on:keyup.enter="enter($event)" :data-id="value.id" >
                         <td v-for="(column, property) in value"  :data-id="value.id" :data-title="property" v-if="ClosedСolumn.indexOf(property) == -1">{{ column }}</td>
                         <td>
-                            <button type="button" class="btn btn-default btn-lg" @click="remove($event)">
-                                <span class="glyphicon glyphicon-remove"></span>
-                            </button></td>
+                            <button class="btn btn-danger btn-xs">delete</button>
+                        </td>
 
                     </tr>
                     </tbody>
@@ -52,7 +51,8 @@
             ...mapGetters([
                 'AllData',
                 'AllColumns',
-                'ClosedСolumn'
+                'ClosedСolumn',
+                'ActionColumn'
             ]),
         },
         data(){

@@ -6,7 +6,8 @@ export default {
         state.NameTable = preName;
     },
     setTitleColumns( state , columns) {
-        state.TitleColumns = columns;
+
+        state.TitleColumns = columns.concat(state.ActionColumn);
     },
     setSpecificallyPlace( state , newValue){
         state.AllData.forEach( ( item ) => {

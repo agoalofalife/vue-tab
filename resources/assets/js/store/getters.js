@@ -10,3 +10,6 @@ export const AllColumns = state => {
 export const ClosedСolumn = state => {
     return state.ClosedСolumn;
 };
+export const ActionColumn = state => {
+    return state.ActionColumn;
+};
