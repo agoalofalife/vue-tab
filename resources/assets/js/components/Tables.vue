@@ -14,26 +14,29 @@
         <div class="search">
             <input type="text" class="form-control"  placeholder="Название таблицы" @input="handlerNameTable($event)">
         </div>
-        <div class="table-responsive">
-            <table class="table" v-if="state" >
-                <thead>
-                <tr>
-                    <th  class="active" v-for="title in AllColumns" v-if="ClosedСolumn.indexOf(title) == -1">{{ title }}</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="value in AllData" @dblclick="rename($event)"  v-on:keyup.enter="enter($event)" :data-id="value.id" >
-                    <td v-for="(column, property) in value"  :data-id="value.id" :data-title="property" v-if="ClosedСolumn.indexOf(property) == -1">{{ column }}</td>
-                    <td>
-                        <button type="button" class="btn btn-default btn-lg" @click="remove($event)">
-                            <span class="glyphicon glyphicon-remove"></span>
-                        </button></td>
+        <div class="col-lg-11 col-md-11 centering">
+            <div class="table-responsive table-bordered">
+                <table class="table" v-if="state" >
+                    <thead>
+                    <tr>
+                        <th  class="active" v-for="title in AllColumns" v-if="ClosedСolumn.indexOf(title) == -1">{{ title }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="value in AllData" @dblclick="rename($event)"  v-on:keyup.enter="enter($event)" :data-id="value.id" >
+                        <td v-for="(column, property) in value"  :data-id="value.id" :data-title="property" v-if="ClosedСolumn.indexOf(property) == -1">{{ column }}</td>
+                        <td>
+                            <button type="button" class="btn btn-default btn-lg" @click="remove($event)">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button></td>
 
-                </tr>
-                </tbody>
-            </table>
-            <p v-else> <img class="preloader" src="/images/preloader.gif"></p>
+                    </tr>
+                    </tbody>
+                </table>
+                <p v-else> <img class="preloader" src="/images/preloader.gif"></p>
+            </div>
         </div>
+
 
 
 
@@ -151,5 +154,9 @@
         margin-left: 40%;
         margin-top: 1%;
         position: relative;
+    }
+    .centering{
+        margin: 0 auto;
+        float: none;
     }
 </style>
