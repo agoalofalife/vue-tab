@@ -18,12 +18,12 @@
             <table class="table" v-if="state" >
                 <thead>
                 <tr>
-                    <th  class="active" v-for="title in AllColumns">{{ title }}</th>
+                    <th  class="active" v-for="title in AllColumns" v-if="ClosedСolumn.indexOf(title) == -1">{{ title }}</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="value in AllData" @dblclick="rename($event)"  v-on:keyup.enter="enter($event)" :data-id="value.id">
-                    <td v-for="(column, property) in value"  :data-id="value.id" :data-title="property" >{{ column }}</td>
+                <tr v-for="value in AllData" @dblclick="rename($event)"  v-on:keyup.enter="enter($event)" :data-id="value.id" >
+                    <td v-for="(column, property) in value"  :data-id="value.id" :data-title="property" v-if="ClosedСolumn.indexOf(property) == -1">{{ column }}</td>
                     <td>
                         <button type="button" class="btn btn-default btn-lg" @click="remove($event)">
                             <span class="glyphicon glyphicon-remove"></span>
@@ -48,7 +48,8 @@
         computed: {
             ...mapGetters([
                 'AllData',
-                'AllColumns'
+                'AllColumns',
+                'ClosedСolumn'
             ]),
         },
         data(){
@@ -111,28 +112,12 @@
             },
             saveFilter(event){
                 var filterOn   = event.target.parentElement.querySelectorAll('input[type=checkbox]:checked'),
-                    casheArray = [],
-                    AllData    = this.$store.getters.AllData,
-                    AllColumns = this.$store.getters.AllColumns;
+                    casheArray = [];
 
                 filterOn.forEach( checkbox => {
                     casheArray.push( checkbox.closest('a').dataset.name );
                 });
-                AllData.forEach( object => {
-                    for (var property  in object) {
-                   if ( casheArray.indexOf(property) !== -1) {
-                       delete object[property];
-                   }
-                    }
-                });
-
-                AllColumns.forEach( (titleColumn, index) => {
-                        if ( casheArray.indexOf(titleColumn) !== -1) {
-                            delete AllColumns[index];
-                        }
-                });
-
-                this.$store.commit('setAllData', AllData);
+                this.$store.commit('setClosedColumns', casheArray);
                 this.filterState = false;
             }
         },

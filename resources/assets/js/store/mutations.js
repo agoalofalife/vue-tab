@@ -19,5 +19,24 @@ export default {
         state.AllData =  state.AllData.filter( ( element ) => {
            return element.id != id;
         })
+    },
+    /**
+     * Колонки для закрытия
+     * @param state
+     * @param newValue
+     */
+    setClosedColumn( state, newValue){
+        state.ClosedСolumn.push(newValue);
+    },
+    /**
+     * Список колокок закрытия
+     * @param state
+     * @param collection
+     */
+    setClosedColumns( state, collection ){
+        state.ClosedСolumn = collection;
+    },
+    deleteClosedColumn( state, oldValue){
+
     }
 }

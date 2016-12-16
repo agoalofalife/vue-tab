@@ -7,3 +7,6 @@ export const NameTable = state => {
 export const AllColumns = state => {
     return state.TitleColumns;
 };
+export const ClosedСolumn = state => {
+    return state.ClosedСolumn;
+};

@@ -10,6 +10,7 @@ const state = {
     AllData      : [],
     TitleColumns : null,
     NameTable    : 'user',
+    ClosedСolumn : []
 
 };
 
