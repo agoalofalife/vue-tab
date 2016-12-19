@@ -13,3 +13,8 @@ export const ClosedСolumn = state => {
 export const ActionColumn = state => {
     return state.ActionColumn;
 };
+
+export const TitleColumnsAlias = state => {
+    return state.TitleColumnsAlias;
+};
+

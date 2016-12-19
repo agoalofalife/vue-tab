@@ -4,6 +4,7 @@ export default {
     AllData( store ) {
         let NameTable = store.getters.NameTable;
         return table.getData( NameTable ).then( response => {
+
              return new Promise( resolve => {
                 store.commit('setAllData', response);
                  resolve(response);
@@ -17,6 +18,7 @@ export default {
                  }
 
                 store.commit('setTitleColumns', list);
+                 store.commit('setTitleColumnsAlias', list);
              }).catch( response => {
                  // response from server with error
              });

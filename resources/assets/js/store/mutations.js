@@ -6,8 +6,7 @@ export default {
         state.NameTable = preName;
     },
     setTitleColumns( state , columns) {
-
-        state.TitleColumns = columns.concat(state.ActionColumn);
+        state.TitleColumns = columns;
     },
     setSpecificallyPlace( state , newValue){
         state.AllData.forEach( ( item ) => {
@@ -22,22 +21,22 @@ export default {
         })
     },
     /**
-     * Колонки для закрытия
+     * Колонку для закрытия
      * @param state
      * @param newValue
      */
-    setClosedColumn( state, newValue){
+    setClosedColumn( state, newValue ){
         state.ClosedСolumn.push(newValue);
     },
     /**
-     * Список колокок закрытия
+     * Insert all close columns
      * @param state
      * @param collection
      */
-    setClosedColumns( state, collection ){
+    setClosedColumns( state, collection = [] ){
         state.ClosedСolumn = collection;
     },
-    deleteClosedColumn( state, oldValue){
-
+    setTitleColumnsAlias( state, Alias ){
+        state.TitleColumnsAlias = Alias.concat(state.ActionColumn);
     }
 }

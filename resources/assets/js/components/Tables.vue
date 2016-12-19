@@ -1,13 +1,19 @@
 <template>
     <div>
-        <sidebar v-on:filterChange="filterChange"></sidebar>
+        <sidebar v-on:filterChange="filterChange" v-on:renameColumnTitle="renameColumnTitle"></sidebar>
+
+        <div class="col-md-2 centering titleCoumnnAlias" v-show="renameColumn">
+        <input v-for="title in TitleColumnsAlias" class="form-control form-group inputColumnAlias" :value="title" v-if="ActionColumn.indexOf(title) == -1">
+            <button class="btn btn-primary btn-xs" @click="saveColumnAlias">Сохранить</button>
+        </div>
+
         <div class="filter-list" v-show="filterState">
             <div class="list-group">
                 <a href="#" class="list-group-item active">
                   Скрыть колонки
                 </a>
                 <a href="#" class="list-group-item" v-for="column in AllColumns" :data-name="column" v-if="ActionColumn.indexOf(column) == -1">
-                    <label><input type="checkbox">  {{ column }}</label></a>
+                    <label><input type="checkbox" :checked="ClosedСolumn.indexOf(column) != -1">  {{ column }}</label></a>
                 <button type="button" class="btn btn-primary btn-lg active filter-btn" @click="saveFilter($event)">Сохранить</button>
             </div>
         </div>
@@ -19,7 +25,7 @@
                 <table class="table table-bordered" v-if="state" >
                     <thead>
                     <tr>
-                        <th  class="active" v-for="title in AllColumns" v-if="ClosedСolumn.indexOf(title) == -1">{{ title }}</th>
+                        <th  class="active" v-for="title in TitleColumnsAlias" v-if="ClosedСolumn.indexOf(title) == -1">{{ title }}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -28,23 +34,19 @@
                         <td>
                             <button class="btn btn-danger btn-xs">delete</button>
                         </td>
-
                     </tr>
                     </tbody>
                 </table>
                 <p v-else> <img class="preloader" src="/images/preloader.gif"></p>
             </div>
         </div>
-
-
-
-
     </div>
 </template>
 
 <script>
     import { mapGetters, mapActions } from 'vuex'
     import sidebar from './sidebar.vue';
+    import ls from 'local-storage';
 
     export default {
         computed: {
@@ -52,14 +54,17 @@
                 'AllData',
                 'AllColumns',
                 'ClosedСolumn',
-                'ActionColumn'
+                'ActionColumn',
+                'TitleColumnsAlias'
             ]),
         },
         data(){
           return {
-              state       : false,
-              NameTable   : null,
-              filterState : false
+              state        : false,
+              NameTable    : null,
+              filterState  : false,
+              renameColumn : false,
+
           }
         },
         methods : {
@@ -69,7 +74,8 @@
 
                 this.$store.dispatch('AllData').then( () => {
                     this.state = this.$store.getters.AllData;
-                } );
+                });
+                this.$store.commit( 'setClosedColumns',  ls.get('ClosedСolumn') !== null ? ls.get('ClosedСolumn')[ls.get('NameTable')] : []);
             },
             rename(e) {
                 this.resetInput(e.target);
@@ -113,6 +119,9 @@
             filterChange(){
                 this.filterState = !this.filterState;
             },
+            renameColumnTitle(){
+                this.renameColumn = !this.renameColumn;
+            },
             saveFilter(event){
                 var filterOn   = event.target.parentElement.querySelectorAll('input[type=checkbox]:checked'),
                     casheArray = [];
@@ -120,14 +129,31 @@
                 filterOn.forEach( checkbox => {
                     casheArray.push( checkbox.closest('a').dataset.name );
                 });
+
                 this.$store.commit('setClosedColumns', casheArray);
+
                 this.filterState = false;
+            },
+            /**
+             * save new name columns
+             */
+            saveColumnAlias(){
+                let cacheAlias = [];
+                Array.prototype.slice.call(document.getElementsByClassName('inputColumnAlias')).forEach( value => {
+                    cacheAlias.push(value.value);
+                });
+                this.$store.commit( 'setTitleColumnsAlias', cacheAlias );
+                this.renameColumn = false;
             }
         },
         created(){
             this.$store.dispatch('AllData').then( () => {
                 this.state = this.$store.getters.AllData;
-            } );
+                this.$store.commit( 'setNameTable', ls.get('NameTable') ||  this.$store.getters.NameTable);
+
+                this.$store.commit( 'setClosedColumns',  ls.get('ClosedСolumn') !== null ? ls.get('ClosedСolumn')[ls.get('NameTable')] : []);
+            });
+
         },
         components:{
             sidebar
@@ -158,5 +184,8 @@
     .centering{
         margin: 0 auto;
         float: none;
+    }
+    .titleCoumnnAlias{
+        margin-top: 50px;
     }
 </style>

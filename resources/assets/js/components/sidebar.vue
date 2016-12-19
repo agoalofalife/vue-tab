@@ -15,7 +15,7 @@
                             <li class="dropdown-header">Список</li>
                             <!--<li><a href="#" v-on:changeFilterState="PropertyFilterState" >Фильтр колонок</a></li>-->
                             <li><a href="#" @click="changeFilterState">Фильтр колонок</a></li>
-                            <li><a href="#" @click="">Переименовать колонки</a></li>
+                            <li><a href="#" @click="renameColumnTitle">Переименовать колонки</a></li>
                         </ul>
                     </li>
                     <!--<li>-->
@@ -355,6 +355,9 @@
             },
             changeFilterState(){
                 this.$emit('filterChange');
+            },
+            renameColumnTitle(){
+                this.$emit('renameColumnTitle');
             }
         }
     }
