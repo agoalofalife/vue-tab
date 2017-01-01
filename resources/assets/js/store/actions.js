@@ -7,6 +7,7 @@ export default {
 
              return new Promise( resolve => {
                 store.commit('setAllData', response);
+
                  resolve(response);
              }).then( response => {
                  for (var first in response) break;
@@ -17,9 +18,10 @@ export default {
                      list.splice( list.indexOf(['__ob__'][element]), 1);
                  }
 
-                store.commit('setTitleColumns', list);
+                 store.commit('setTitleColumns', list);
                  store.commit('setTitleColumnsAlias', list);
              }).catch( response => {
+
                  // response from server with error
              });
          });
@@ -37,5 +39,20 @@ export default {
         return table.deleteRow( NameTable, parameters).then( response => {
             store.commit( 'remove', response.id );
         })
+    },
+    AllTables( store ){
+        // get list tables from  server only if not empty
+
+        if ( store.getters.ListTables.length === 0)
+        {
+            return table.getAllTablesInDatabase().then( response => {
+                return new Promise( resolve => {
+                    store.commit('setListAllTables', response.list);
+                    resolve(response.list);
+                });
+
+
+            });
+        }
     }
 }

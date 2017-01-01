@@ -11,10 +11,11 @@ const plugin = localstoragePlugin();
 const state = {
     AllData           : [],
     TitleColumns      : null,
-    NameTable         : 'user',
+    NameTable         : 'users',
     ClosedСolumn      :  [],
     ActionColumn      : ['action'],
-    TitleColumnsAlias : null
+    TitleColumnsAlias : null,
+    AllTables         : []
 };
 
 export default new Vuex.Store({

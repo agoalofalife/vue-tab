@@ -18,3 +18,6 @@ export const TitleColumnsAlias = state => {
     return state.TitleColumnsAlias;
 };
 
+export const ListTables = state => {
+    return state.AllTables;
+};

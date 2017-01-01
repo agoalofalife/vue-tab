@@ -10,12 +10,12 @@
                         <a href="#">agoalofalife</a>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Действия с таблицей <span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Working with a table<span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
-                            <li class="dropdown-header">Список</li>
+                            <li class="dropdown-header">List</li>
                             <!--<li><a href="#" v-on:changeFilterState="PropertyFilterState" >Фильтр колонок</a></li>-->
-                            <li><a href="#" @click="changeFilterState">Фильтр колонок</a></li>
-                            <li><a href="#" @click="renameColumnTitle">Переименовать колонки</a></li>
+                            <li><a href="#" @click="changeFilterState">Filter column</a></li>
+                            <li><a href="#" @click="renameColumnTitle">Rename column</a></li>
                         </ul>
                     </li>
                     <!--<li>-->

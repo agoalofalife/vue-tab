@@ -11,19 +11,28 @@
 |
 */
 
+
+
+
 Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/{table}', function ($model) {
 
-    $model           = 'App\\'.$model;
-
-    if ( class_exists($model) )
+    if ( Schema::hasTable($model) )
     {
-        $table       = new $model();
-        $data        = $table->all()->toJson();
+        $data = DB::table($model)->get()->toJson();
         return response()->json($data);
     }
+
+//    $model           = 'App\\'.$model;
+//
+//    if ( class_exists($model) )
+//    {
+//        $table       = new $model();
+//        $data        = $table->all()->toJson();
+//        return response()->json($data);
+//    }
 
    return response()->json([], 404);
 });
@@ -47,4 +56,9 @@ Route::delete('/{table}', function ($model, Illuminate\Http\Request $request){
     if ( $delete ) {
         return response()->json([ 'id' => $request->id]);
     }
+});
+
+// get all list tables in database
+Route::get('/table/getAll', function (){
+    return response()->json([ 'list' => DB::select('SHOW TABLES')]);
 });

@@ -2,24 +2,51 @@
     <div>
         <sidebar v-on:filterChange="filterChange" v-on:renameColumnTitle="renameColumnTitle"></sidebar>
 
+        <!--change column -->
+        <transition name="tablesList"
+                    enter-active-class="animated fadeIn"
+                    leave-active-class="animated fadeOut">
         <div class="col-md-2 centering titleCoumnnAlias" v-show="renameColumn">
         <input v-for="title in TitleColumnsAlias" class="form-control form-group inputColumnAlias" :value="title" v-if="ActionColumn.indexOf(title) == -1">
-            <button class="btn btn-primary btn-xs" @click="saveColumnAlias">Сохранить</button>
+            <button class="btn btn-primary btn-xs" @click="saveColumnAlias">Save</button>
         </div>
+        </transition>
 
+
+        <transition name="tablesList"
+                    enter-active-class="animated fadeIn"
+                    leave-active-class="animated fadeOut">
         <div class="filter-list" v-show="filterState">
             <div class="list-group">
                 <a href="#" class="list-group-item active">
-                  Скрыть колонки
+                  Hide columns
                 </a>
                 <a href="#" class="list-group-item" v-for="column in AllColumns" :data-name="column" v-if="ActionColumn.indexOf(column) == -1">
                     <label><input type="checkbox" :checked="ClosedСolumn.indexOf(column) != -1">  {{ column }}</label></a>
-                <button type="button" class="btn btn-primary btn-lg active filter-btn" @click="saveFilter($event)">Сохранить</button>
+                <button type="button" class="btn btn-primary btn-lg active filter-btn" @click="saveFilter($event)">Save</button>
             </div>
         </div>
-        <div class="search">
-            <input type="text" class="form-control"  placeholder="Название таблицы" @input="handlerNameTable($event)">
+        </transition>
+
+        <div class="search col-md-2 ">
+            <input type="text" class="form-control"  placeholder="Enter name table please..." @change="handlerNameTable($event.target.value)" ref="enterNameTable">
         </div>
+
+        <div class="row"></div>
+        <!--<span class="badge pull-right">42</span>-->
+     <div class="all_tables">
+         <button type="button" class="btn btn-primary button_show_tables" @click="changeStateListTables">Show all tables</button>
+
+         <transition name="tablesList"
+                     enter-active-class="animated flipInX"
+                     leave-active-class="animated flipOutX">
+
+         <ul class="nav nav-pills nav-stacked " v-show="stateListAllTables">
+             <li class="label label-info col-md-2" v-for="table in ListTables" @click="selectedTable($event.target.textContent)">{{ table.Tables_in_vuetable }}</li>
+         </ul>
+         </transition>
+     </div>
+
         <div class="col-lg-11 col-md-11 centering">
             <div class="table-responsive ">
                 <table class="table table-bordered" v-if="state" >
@@ -37,6 +64,7 @@
                     </tr>
                     </tbody>
                 </table>
+
                 <p v-else> <img class="preloader" src="/images/preloader.gif"></p>
             </div>
         </div>
@@ -55,27 +83,30 @@
                 'AllColumns',
                 'ClosedСolumn',
                 'ActionColumn',
-                'TitleColumnsAlias'
+                'TitleColumnsAlias',
+                'ListTables'
             ]),
         },
         data(){
           return {
-              state        : false,
-              NameTable    : null,
-              filterState  : false,
-              renameColumn : false,
-
+              state              : false,
+              NameTable          : null,
+              filterState        : false,
+              renameColumn       : false,
+              stateListAllTables : false,
           }
         },
         methods : {
-            handlerNameTable(e){
+            // insert name table in input
+            handlerNameTable(val){
                 this.state = false;
-                this.$store.commit( 'setNameTable', e.target.value );
+                this.$store.commit( 'setNameTable', val );
 
                 this.$store.dispatch('AllData').then( () => {
                     this.state = this.$store.getters.AllData;
                 });
                 this.$store.commit( 'setClosedColumns',  ls.get('ClosedСolumn') !== null ? ls.get('ClosedСolumn')[ls.get('NameTable')] : []);
+                this.$store.commit( 'setTitleColumnsAlias', ls.get('TitleColumnsAlias') !== null ? ls.get('TitleColumnsAlias')[ls.get('NameTable')] : this.$store.getters.AllColumns )
             },
             rename(e) {
                 this.resetInput(e.target);
@@ -122,6 +153,7 @@
             renameColumnTitle(){
                 this.renameColumn = !this.renameColumn;
             },
+            // save filter column , example something hide
             saveFilter(event){
                 var filterOn   = event.target.parentElement.querySelectorAll('input[type=checkbox]:checked'),
                     casheArray = [];
@@ -134,9 +166,7 @@
 
                 this.filterState = false;
             },
-            /**
-             * save new name columns
-             */
+            // save new name columns
             saveColumnAlias(){
                 let cacheAlias = [];
                 Array.prototype.slice.call(document.getElementsByClassName('inputColumnAlias')).forEach( value => {
@@ -144,14 +174,30 @@
                 });
                 this.$store.commit( 'setTitleColumnsAlias', cacheAlias );
                 this.renameColumn = false;
+            },
+            // change state all show tables
+            changeStateListTables(){
+                this.$store.dispatch('AllTables').then( list => {
+                    this.stateListAllTables = !this.stateListAllTables;
+                });
+            },
+            // the selected table in placeholder
+            selectedTable(table){
+                this.$refs.enterNameTable.value = table;
+                this.handlerNameTable(table);
             }
         },
         created(){
-            this.$store.dispatch('AllData').then( () => {
-                this.state = this.$store.getters.AllData;
-                this.$store.commit( 'setNameTable', ls.get('NameTable') ||  this.$store.getters.NameTable);
+            // install NameTable
+            this.$store.commit( 'setNameTable', ls.get('NameTable') ||  this.$store.getters.NameTable);
 
+            this.$store.dispatch('AllData').then( () => {
+
+                this.state = this.$store.getters.AllData;
                 this.$store.commit( 'setClosedColumns',  ls.get('ClosedСolumn') !== null ? ls.get('ClosedСolumn')[ls.get('NameTable')] : []);
+
+                // ActionColumn
+                this.$store.commit( 'setTitleColumnsAlias', ls.get('TitleColumnsAlias')[ls.get('NameTable')] !== undefined ? ls.get('TitleColumnsAlias')[ls.get('NameTable')] : this.$store.getters.AllColumns )
             });
 
         },
@@ -162,7 +208,7 @@
 </script>
 <style scoped>
     .search {
-        margin: 40px 350px;
+        margin: 2% 4%;
     }
     .preloader{
         width: 20%;
@@ -188,4 +234,35 @@
     .titleCoumnnAlias{
         margin-top: 50px;
     }
+    .table-responsive{
+        float: left;
+    }
+    .all_tables{
+        margin: 1% 5%;
+    }
+    .button_show_tables{
+        margin-bottom: 1%;
+    }
+
+    /* Transition css for animation */
+
+    /*.tablesList-enter-active, .tablesList-leave-active {*/
+        /*transition: opacity .5s*/
+    /*}*/
+    /*.tablesList-enter, .tablesList-leave-active {*/
+        /*opacity: 0*/
+    /*}*/
+
+    /* Анимации появления и исчезновения могут иметь */
+    /* различные продолжительности и динамику.      */
+    /*.tablesList-enter-active {*/
+        /*transition: all .3s ease;*/
+    /*}*/
+    /*.tablesList-leave-active {*/
+        /*transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);*/
+    /*}*/
+    /*.tablesList-enter, .tablesList-leave-active {*/
+        /*transform: translateX(10px);*/
+        /*opacity: 0;*/
+    /*}*/
 </style>

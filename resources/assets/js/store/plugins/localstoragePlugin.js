@@ -8,11 +8,15 @@ export default function localstoragePlugin () {
                 ls.set('NameTable', mutation.payload)
             }
             else if  (mutation.type === 'setClosedColumns'){
-                console.log( ls.get('ClosedСolumn'),'d' );
                 let constructor = Object.assign(ls.get('ClosedСolumn') || {},{
                     [state.NameTable] : mutation.payload,
                 });
                 ls.set('ClosedСolumn', constructor);
+            }
+            else if ( mutation.type === 'setTitleColumnsAlias'){
+                ls.set('TitleColumnsAlias', {
+                    [state.NameTable] : mutation.payload,
+                });
             }
         })
     }

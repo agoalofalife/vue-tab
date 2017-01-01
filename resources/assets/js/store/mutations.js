@@ -37,6 +37,14 @@ export default {
         state.ClosedСolumn = collection;
     },
     setTitleColumnsAlias( state, Alias ){
-        state.TitleColumnsAlias = Alias.concat(state.ActionColumn);
+        if (Alias !== undefined)
+        {
+            state.TitleColumnsAlias = Alias.concat(state.ActionColumn);
+        }
+
+    },
+    setListAllTables( state, list ) {
+        state.AllTables = list;
     }
+
 }
