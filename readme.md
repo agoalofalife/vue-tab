@@ -1,27 +1,33 @@
-# Laravel PHP Framework
+#
+### Example tables from the server to Vue.js and Laravel
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+![](http://limg2.opendigg.com/images/lang_icon/vue.png!small)
+![](https://pbs.twimg.com/profile_images/2796504369/0e7f8afe915231804e7dd1d0f1e4c0e9_normal.png)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, queueing, and caching.
+**Used :**
+ES6 Vue.js 2.0 Vuex Laravel 5.3
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
 
-## Official Documentation
+* This example shows dynamic render information from the server
 
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
+* Data changes
 
-## Contributing
+* Filtering and renaming columns
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
 
-## Security Vulnerabilities
+### You can select the table
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+It is enough to select or enter the name of the table
+![](http://g.recordit.co/rUxtzwnRQF.gif)
 
-## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+### To change table fields
+Update data in table
+![](http://g.recordit.co/f3jVAtYdFZ.gif)
+
+### To rename the columns and to hide
+
+![](http://g.recordit.co/izTcyWCYGY.gif)
+
+### And just delete
+![](http://g.recordit.co/iLVjSNcMUm.gif)

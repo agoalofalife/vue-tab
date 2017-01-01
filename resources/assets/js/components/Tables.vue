@@ -59,7 +59,7 @@
                     <tr v-for="value in AllData" @dblclick="rename($event)"  v-on:keyup.enter="enter($event)" :data-id="value.id" >
                         <td v-for="(column, property) in value"  :data-id="value.id" :data-title="property" v-if="ClosedСolumn.indexOf(property) == -1">{{ column }}</td>
                         <td>
-                            <button class="btn btn-danger btn-xs">delete</button>
+                            <button class="btn btn-danger btn-xs" @click="remove($event)">delete</button>
                         </td>
                     </tr>
                     </tbody>
@@ -243,26 +243,4 @@
     .button_show_tables{
         margin-bottom: 1%;
     }
-
-    /* Transition css for animation */
-
-    /*.tablesList-enter-active, .tablesList-leave-active {*/
-        /*transition: opacity .5s*/
-    /*}*/
-    /*.tablesList-enter, .tablesList-leave-active {*/
-        /*opacity: 0*/
-    /*}*/
-
-    /* Анимации появления и исчезновения могут иметь */
-    /* различные продолжительности и динамику.      */
-    /*.tablesList-enter-active {*/
-        /*transition: all .3s ease;*/
-    /*}*/
-    /*.tablesList-leave-active {*/
-        /*transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);*/
-    /*}*/
-    /*.tablesList-enter, .tablesList-leave-active {*/
-        /*transform: translateX(10px);*/
-        /*opacity: 0;*/
-    /*}*/
 </style>

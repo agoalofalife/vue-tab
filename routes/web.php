@@ -17,6 +17,7 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
 Route::get('/{table}', function ($model) {
 
     if ( Schema::hasTable($model) )
@@ -24,25 +25,16 @@ Route::get('/{table}', function ($model) {
         $data = DB::table($model)->get()->toJson();
         return response()->json($data);
     }
-
-//    $model           = 'App\\'.$model;
-//
-//    if ( class_exists($model) )
-//    {
-//        $table       = new $model();
-//        $data        = $table->all()->toJson();
-//        return response()->json($data);
-//    }
-
    return response()->json([], 404);
 });
 
 
 Route::post('/{table}', function ($model,Illuminate\Http\Request $request) {
-        $model = 'App\\'.ucfirst($model);
-        $isSave = $model::find($request->id)->update([
-            "{$request->title}" => $request->value
-        ]);
+
+    $isSave = DB::table($model)->where('id', $request->id)->update([
+        $request->title => $request->value
+    ]);
+
     if ( $isSave ) {
         return response()->json([ 'title' => $request->title, 'value' => $request->value , 'id' => $request->id]);
     }
@@ -50,10 +42,9 @@ Route::post('/{table}', function ($model,Illuminate\Http\Request $request) {
 });
 
 Route::delete('/{table}', function ($model, Illuminate\Http\Request $request){
-    $model  = 'App\\'.ucfirst($model);
-    $delete = $model::destroy($request->id);
 
-    if ( $delete ) {
+    $isDelete = DB::table($model)->where('id', $request->id)->delete();
+    if ( $isDelete ) {
         return response()->json([ 'id' => $request->id]);
     }
 });

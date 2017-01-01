@@ -41,7 +41,6 @@ export default {
         {
             state.TitleColumnsAlias = Alias.concat(state.ActionColumn);
         }
-
     },
     setListAllTables( state, list ) {
         state.AllTables = list;

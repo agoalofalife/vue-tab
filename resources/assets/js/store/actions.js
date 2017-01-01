@@ -19,7 +19,7 @@ export default {
                  }
 
                  store.commit('setTitleColumns', list);
-                 store.commit('setTitleColumnsAlias', list);
+                 // store.commit('setTitleColumnsAlias', list);
              }).catch( response => {
 
                  // response from server with error
