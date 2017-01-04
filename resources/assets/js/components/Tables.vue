@@ -2,6 +2,8 @@
     <div>
         <sidebar v-on:filterChange="filterChange" v-on:renameColumnTitle="renameColumnTitle"></sidebar>
 
+
+        <div class="col-lg-11 col-md-11 centering">
         <!--change column -->
         <transition name="tablesList"
                     enter-active-class="animated fadeIn"
@@ -28,7 +30,7 @@
         </div>
         </transition>
 
-        <div class="search col-md-2 ">
+        <div class="search">
             <input type="text" class="form-control"  placeholder="Enter name table please..." @change="handlerNameTable($event.target.value)" ref="enterNameTable">
         </div>
 
@@ -47,7 +49,28 @@
          </transition>
      </div>
 
-        <div class="col-lg-11 col-md-11 centering">
+        <!--Add new record-->
+        <div v-show="stateIconAddRecord">
+            <span class="glyphicon glyphicon-plus add--new--record" @click="addNewRecord"></span>
+
+            <!--maskInputNewRecord-->
+        </div>
+            <div v-show="!stateIconAddRecord" >
+                <div class="form-group col-md-6" v-for="mask in maskInputNewRecord">
+                    <label class="col-sm-2 control-label">{{ mask }}</label>
+                    <div class="col-sm-10">
+                        <input type="email" class="form-control">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary button_show_tables" @click="saveNewRecord">Add new Record</button>
+            </div>
+
+
+        <!--<div v-show="!stateIconAddRecord" class="form-group col-md-1" v-for="mask in maskInputNewRecord">-->
+            <!--<input type="email" class="form-control" id="exampleInputEmail2" placeholder="Enter email">-->
+        <!--</div>-->
+
+        <div class="">
             <div class="table-responsive ">
                 <table class="table table-bordered" v-if="state" >
                     <thead>
@@ -67,6 +90,7 @@
 
                 <p v-else> <img class="preloader" src="/images/preloader.gif"></p>
             </div>
+        </div>
         </div>
     </div>
 </template>
@@ -94,6 +118,8 @@
               filterState        : false,
               renameColumn       : false,
               stateListAllTables : false,
+              stateIconAddRecord : true,
+              maskInputNewRecord : []
           }
         },
         methods : {
@@ -185,6 +211,17 @@
             selectedTable(table){
                 this.$refs.enterNameTable.value = table;
                 this.handlerNameTable(table);
+            },
+            addNewRecord(){
+                this.stateIconAddRecord = ! this.stateIconAddRecord;
+                //all fields except 'id'
+                let tempArray           = this.$store.getters.AllColumns.filter( value => {
+                    return value !== 'id';
+                });
+                this.maskInputNewRecord = tempArray;
+            },
+            saveNewRecord(){
+                this.stateIconAddRecord = ! this.stateIconAddRecord;
             }
         },
         created(){
@@ -208,7 +245,8 @@
 </script>
 <style scoped>
     .search {
-        margin: 2% 4%;
+        margin: 2% 0%;
+        width: 30%;
     }
     .preloader{
         width: 20%;
@@ -238,9 +276,12 @@
         float: left;
     }
     .all_tables{
-        margin: 1% 5%;
+        margin: 1% 0%;
     }
     .button_show_tables{
+        margin-bottom: 1%;
+    }
+    .add--new--record{
         margin-bottom: 1%;
     }
 </style>

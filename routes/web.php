@@ -13,6 +13,30 @@
 
 
 
+Route::get('test', function (){
+
+    $schema = DB::getDoctrineSchemaManager();
+    dd($schema->listTableDetails('posts'));
+});
+//example get getForeignKeys
+Route::get('fields-databases', function (){
+
+    $schema = DB::getDoctrineSchemaManager();
+    $columns = $schema->listTableDetails('posts')->getForeignKeys();
+    $column = array_shift($columns);
+//    dd($column->getForeignTableName());  name table
+//    dd($column->getForeignColumns()); name column in externel table
+//    dd($column->getLocalColumns()); name key example user_id
+
+//    dd($column->getColumns());
+    dd($columns);
+//    dd($columns['id']->getType());
+    foreach ($columns as $column) { //run loop
+        echo $column->getType() . '<br>'; //here you can define your inputes
+    }
+});
+
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -53,3 +77,4 @@ Route::delete('/{table}', function ($model, Illuminate\Http\Request $request){
 Route::get('/table/getAll', function (){
     return response()->json([ 'list' => DB::select('SHOW TABLES')]);
 });
+

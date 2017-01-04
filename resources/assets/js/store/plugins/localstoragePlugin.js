@@ -14,7 +14,6 @@ export default function localstoragePlugin () {
                 ls.set('ClosedСolumn', constructor);
             }
             else if ( mutation.type === 'setTitleColumnsAlias'){
-                console.log( ls.get('TitleColumnsAlias')  );
                 let constructor = Object.assign(ls.get('TitleColumnsAlias') || {},{
                     [state.NameTable] : mutation.payload,
                 });
